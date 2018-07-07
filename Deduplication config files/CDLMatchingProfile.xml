@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MatchingProfile
+	xmlns="http://www.exlibrisgroup.com/xsd/primo/platform"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.exlibrisgroup.com/xsd/primo/platform ../../../../../../primo_publishing/publish/src/main/com/exlibris/publish/xsd/matchingProfile_v1.0.xsd ">
+
+<handlers>
+
+ <handler id="SINGLE_MATCH">
+    <fieldID>f20</fieldID>
+    <name>com.exlibris.primo.publish.platform.dedup.comparator.DedupStringComparator</name>
+    <arguments>	
+		<argument name="match">800</argument> 
+  		<argument name="mismatch">0</argument> 
+   </arguments>
+ </handler>
+
+ <handler id="CDLDate">
+    <fieldID>f6</fieldID>
+    <name>com.exlibris.primo.publish.platform.dedup.comparator.DedupNumericComparator</name>
+    <arguments>
+  		<argument name="match">+200</argument>
+  		<argument name="within" param="2">-25</argument>
+  		<argument name="mismatch">-250</argument>
+   </arguments>
+ </handler>
+<handler id="CDLID">
+    <fieldID>f1,f2,f3,f4</fieldID>
+    <name>com.exlibris.primo.publish.platform.dedup.cdlimpl.CDLIDComparator</name>
+    <arguments>
+		  <argument name="recID_match">+200</argument>
+		  <argument name="recID_recIDInvalid_match">+100</argument>
+		  <argument name="recIDInvalid_match">+50</argument>
+		  <argument name="recID_mismatch">-470</argument>
+		  <argument name="recID_recIDInvalid_mismatch">-50</argument>
+		  <argument name="ISBN_match">+85</argument>
+		  <argument name="ISBN_ISSN_match">+30</argument>
+		  <argument name="ISSN_ISSN_match">+10</argument>
+		  <argument name="ISSN_ISBN_mismatch">-225</argument>
+  </arguments>
+  </handler>
+ <handler id="CDLShortTitle">
+    <fieldID>f5</fieldID>
+    <name>com.exlibris.primo.publish.platform.dedup.comparator.DedupStringComparator</name>
+    <arguments>
+  		<argument name="match">+450</argument>
+  </arguments>
+  </handler>
+ <handler id="CDLSubShortTitle">
+    <fieldID>f5</fieldID>
+    <name>com.exlibris.primo.publish.platform.dedup.comparator.DedupStringComparator</name>
+    <arguments>
+  		<argument name="match">-450</argument>
+  </arguments>
+  </handler>
+ <handler id="CDLLongTitle">
+    <fieldID>f7</fieldID>
+    <name>com.exlibris.primo.publish.platform.dedup.cdlimpl.CDLTitleComparator</name>
+    <arguments>
+  		<argument name="match">600</argument>
+  		<argument name="within">350</argument>
+		<argument name="keywords_weight_factor">450</argument>
+		<argument name="keywords_order_base_weight">50</argument>
+		<argument name="mismatch">-600</argument>
+  </arguments>
+  </handler>
+ <handler id="CDLCountryOfPub">
+    <fieldID>f8</fieldID>
+    <name>com.exlibris.primo.publish.platform.dedup.comparator.DedupStringComparator</name>
+    <arguments>
+  		<argument name="match">40</argument>
+  		<argument name="mismatch">-205</argument>
+  </arguments>
+  </handler>
+ <handler id="CDLPagination">
+    <fieldID>f9</fieldID>
+    <name>com.exlibris.primo.publish.platform.dedup.cdlimpl.CDLPageHandlerComparator</name>
+    <arguments>
+		<argument name="matchgt">100</argument>
+		<argument name="matchlt">50</argument>
+  		<argument name="withingt">50</argument>
+  		<argument name="withinlt">20</argument>
+  		<argument name="mismatch">-225</argument>
+   </arguments>
+ </handler>
+   <handler id="CDLPublisher">
+    <fieldID>f10</fieldID>
+    <name>com.exlibris.primo.publish.platform.dedup.comparator.DedupStringComparator</name>
+    <arguments>
+  		<argument name="match">+100</argument>
+  		<argument name="within">+100</argument>
+  		<argument name="mismatch">-25</argument>
+  </arguments>
+  </handler>
+   <handler id="CDLMainEntry">
+    <fieldID>f11</fieldID>
+    <name>com.exlibris.primo.publish.platform.dedup.cdlimpl.CDLMainEntryComparator</name>
+    <arguments>
+  		<argument name="match">+125</argument>
+  		<argument name="both_missing">+75</argument>
+		<argument name="one_missing">+25</argument>
+  		<argument name="keywords_weight_factor" param="49">80</argument>
+  		<argument name="keywords_order_base_weight" param="49">10</argument>
+		<argument name="mismatch">-200</argument>
+  </arguments>
+ </handler>
+
+
+</handlers>
+<thresholds>
+	<threshold id="tr1">
+	  	<upper_threshold>+850</upper_threshold>
+	 	 <lower_threshold>0</lower_threshold>
+  	</threshold>
+	<threshold id="tr2">
+	  	<upper_threshold>+875</upper_threshold>
+  	</threshold>
+  	<threshold id="tr3">
+	  	<upper_threshold>+800</upper_threshold> 
+  	</threshold>
+</thresholds>
+<steps>
+    <step type="handler">SINGLE_MATCH</step>
+    <step type="threshold">tr3</step>
+	<step type="handler">CDLID</step>
+	<step type="handler">CDLShortTitle</step>
+	<step type="handler">CDLDate</step>
+	<step type="threshold">tr1</step>
+	<step type="handler">CDLSubShortTitle</step>
+	<step type="handler">CDLLongTitle</step>
+	<step type="handler">CDLCountryOfPub</step>
+	<step type="handler">CDLPagination</step>
+	<step type="handler">CDLPublisher</step>
+	<step type="handler">CDLMainEntry</step>
+	<step type="threshold">tr2</step>
+</steps>
+</MatchingProfile>

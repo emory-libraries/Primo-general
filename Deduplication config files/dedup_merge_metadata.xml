@@ -1,0 +1,1919 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MergeMetadata
+	xmlns="http://www.exlibris.com/primo/publish/platform/pnxmerge"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.exlibris.com/primo/publish/platform/pnxmerge ../../../../../../primo_publishing/publish/src/main/com/exlibris/publish/xsd/merge_metadata.xsd ">
+
+<!--
+ /*
+    explanation on weights
+    look at the example of the two records below, lets assume that 'electronic_journal' is  prefered on
+    'microfilm' and 1915 is higher then 1914.
+    so,record1 has one prefered field and record2 also has one prefered field,we wouldn't know which to prefere,
+    we have to rendomally choose one of them.
+    but we can give them weight,if we want to prefere 'delcategory' then we should give it more weight
+    then 'date'.
+
+    <record1>
+        <delivery>
+            <delcategory>electronic_journal</delcategory>
+        </delivery>
+
+        <addata>
+            <date>1914</date>
+        </addata>
+    </record1>
+
+
+    <record2>
+        <delivery>
+            <delcategory>microfilm</delcategory>
+        </delivery>
+
+        <addata>
+            <date>1915</date>
+        </addata>
+    </record2>
+
+ -->
+<!-- all xpaths must point to simple elements with a string value -->
+<!-- ids must be unique for all preferedField and mergeField -->
+	<preferedRecord selector="com.exlibris.primo.publish.platform.pnxmerge.DefaultPreferedRecordSelector">
+		<decisionField id="category" xpath="/record/delivery/delcategory"  weight="3" comparatorClass="com.exlibris.primo.publish.platform.pnxmerge.ByListOrderFieldComparator">
+			<!-- delivery category values are handled now in "Preferred Record-Delivery Category Priority" mapping table
+			<orderValue>SFX Resource</orderValue>
+			<orderValue>Online Resource</orderValue>
+			<orderValue>MetaLib Resource</orderValue>
+			<orderValue>Physical Item</orderValue>
+			<orderValue>Microform</orderValue>
+			-->
+		</decisionField>
+<!--
+		<decisionField id="language" xpath="/record/search/language" weight="2" comparatorClass="com.exlibris.primo.publish.platform.pnxmerge.ByListOrderFieldComparator">
+			<orderValue>EN</orderValue>
+			<orderValue>FR</orderValue>
+		</decisionField>
+
+		<decisionField id="date" xpath="/record/addata/date" weight="1" comparatorClass="com.exlibris.primo.publish.platform.pnxmerge.ByNumericHigherValueFieldComparator">
+		</decisionField>
+ -->
+	</preferedRecord>
+
+
+<!--
+Some rulles:
+can't merge a field twice:
+for exampel can't have this twice,the second is unpridictable:
+mergeField xpath="/record/delivery/delcategory
+
+can't merge a section and then one of its fields or a field and then its section.
+example:
+merge Field xpath="/record/delivery/delcategory
+merge Section xpath="/record/delivery/
+the merge section will have unpridictable resuls.
+the reason is that when merging a field we take the java xml object detach it from its parent and attache
+it to another parent in the prefered record.
+doing it a deferent way will pay in performance. it will be cloning the objects.
+
+
+ -->
+
+
+	<mergeFields>
+		<mergeField id="control_almaid" xpath="/record/control/almaid" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAllMergeResolver">
+			<!-- when adding sub fields to a field we have to also add a $$V before the field's value itself -->
+			<mrgInterceptor id="leadingDelim" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatConstantSubFieldMergeInterceptor">
+				<property name="constant" value="$$V"/>
+				<property name="delim" value=""/>
+				<property name="concatTo" value="begining"/>
+			</mrgInterceptor>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+		<mergeField id="control_sourcerecordid" xpath="/record/control/sourcerecordid" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAllMergeResolver">
+			<!-- when adding sub fields to a field we have to also add a $$V before the field's value itself -->
+			<mrgInterceptor id="leadingDelim" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatConstantSubFieldMergeInterceptor">
+				<property name="constant" value="$$V"/>
+				<property name="delim" value=""/>
+				<property name="concatTo" value="begining"/>
+			</mrgInterceptor>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+
+		<mergeField id="control_sourceid" xpath="/record/control/sourceid" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAllMergeResolver">
+			<!-- when adding sub fields to a field we have to also add a $$V before the field's value itself -->
+			<mrgInterceptor id="leadingDelim" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatConstantSubFieldMergeInterceptor">
+				<property name="constant" value="$$V"/>
+				<property name="delim" value=""/>
+				<property name="concatTo" value="begining"/>
+			</mrgInterceptor>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+
+	<!-- replace the value of /record/control/recordid with the id from the dedup merge record -->
+		<mergeField id="control_recordid" xpath="/record/control/recordid" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.ReplaceFieldValueMergeResolver">
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromMergedRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value=""/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="control_sourcedbandrecordid" xpath="/record/control/sourcedbandrecordid" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAllMergeResolver">
+			<!-- when adding sub fields to a field we have to also add a $$V before the field's value itself -->
+			<mrgInterceptor id="leadingDelim" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatConstantSubFieldMergeInterceptor">
+				<property name="constant" value="$$V"/>
+				<property name="delim" value=""/>
+				<property name="concatTo" value="begining"/>
+			</mrgInterceptor>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="control_originalsourceid" xpath="/record/control/originalsourceid" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAllMergeResolver">
+			<!-- when adding sub fields to a field we have to also add a $$V before the field's value itself -->
+			<mrgInterceptor id="leadingDelim" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatConstantSubFieldMergeInterceptor">
+				<property name="constant" value="$$V"/>
+				<property name="delim" value=""/>
+				<property name="concatTo" value="begining"/>
+			</mrgInterceptor>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="control_recordtype" xpath="/record/control/recordtype" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAllMergeResolver">
+			<!-- when adding sub fields to a field we have to also add a $$V before the field's value itself -->
+			<mrgInterceptor id="leadingDelim" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatConstantSubFieldMergeInterceptor">
+				<property name="constant" value="$$V"/>
+				<property name="delim" value=""/>
+				<property name="concatTo" value="begining"/>
+			</mrgInterceptor>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="control_addsrcrecordid" xpath="/record/control/addsrcrecordid" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAllMergeResolver">
+			<!-- when adding sub fields to a field we have to also add a $$V before the field's value itself -->
+			<mrgInterceptor id="leadingDelim" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatConstantSubFieldMergeInterceptor">
+				<property name="constant" value="$$V"/>
+				<property name="delim" value=""/>
+				<property name="concatTo" value="begining"/>
+			</mrgInterceptor>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+
+		<mergeField id="control_sourcetype" xpath="/record/control/sourcetype" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAllMergeResolver">
+			<!-- when adding sub fields to a field we have to also add a $$V before the field's value itself -->
+			<mrgInterceptor id="leadingDelim" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatConstantSubFieldMergeInterceptor">
+				<property name="constant" value="$$V"/>
+				<property name="delim" value=""/>
+				<property name="concatTo" value="begining"/>
+			</mrgInterceptor>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+
+		<mergeField id="control_sourceformat" xpath="/record/control/sourceformat" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAllMergeResolver">
+			<!-- when adding sub fields to a field we have to also add a $$V before the field's value itself -->
+			<mrgInterceptor id="leadingDelim" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatConstantSubFieldMergeInterceptor">
+				<property name="constant" value="$$V"/>
+				<property name="delim" value=""/>
+				<property name="concatTo" value="begining"/>
+			</mrgInterceptor>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+
+		<mergeField id="control_sourcesystem" xpath="/record/control/sourcesystem" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAllMergeResolver">
+			<!-- when adding sub fields to a field we have to also add a $$V before the field's value itself -->
+			<mrgInterceptor id="leadingDelim" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatConstantSubFieldMergeInterceptor">
+				<property name="constant" value="$$V"/>
+				<property name="delim" value=""/>
+				<property name="concatTo" value="begining"/>
+			</mrgInterceptor>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+
+		<mergeField id="control_lastmodified" xpath="/record/control/lastmodified" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAllMergeResolver">
+			<!-- when adding sub fields to a field we have to also add a $$V before the field's value itself -->
+			<mrgInterceptor id="leadingDelim" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatConstantSubFieldMergeInterceptor">
+				<property name="constant" value="$$V"/>
+				<property name="delim" value=""/>
+				<property name="concatTo" value="begining"/>
+			</mrgInterceptor>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="control_ilsapiid" xpath="/record/control/ilsapiid" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAllMergeResolver">
+			<!-- when adding sub fields to a field we have to also add a $$V before the field's value itself -->
+			<mrgInterceptor id="leadingDelim" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatConstantSubFieldMergeInterceptor">
+				<property name="constant" value="$$V"/>
+				<property name="delim" value=""/>
+				<property name="concatTo" value="begining"/>
+			</mrgInterceptor>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="control_colldiscovery" xpath="/record/control/colldiscovery" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAllMergeResolver">
+			<!-- when adding sub fields to a field we have to also add a $$V before the field's value itself -->
+			<mrgInterceptor id="leadingDelim" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatConstantSubFieldMergeInterceptor">
+				<property name="constant" value="$$V"/>
+				<property name="delim" value=""/>
+				<property name="concatTo" value="begining"/>
+			</mrgInterceptor>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="display_source" xpath="/record/display/source" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAllMergeResolver">
+			<!-- when adding sub fields to a field we have to also add a $$V before the field's value itself-->
+			<mrgInterceptor id="leadingDelim" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatConstantSubFieldMergeInterceptor">
+				<property name="constant" value="$$V"/>
+				<property name="delim" value=""/>
+				<property name="concatTo" value="begining"/>
+			</mrgInterceptor>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="display_availability_library" xpath="/record/display/availability_library" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAllAndDistinctMergeResolver">
+			<!-- when adding sub fields to a field we have to also add a $$V before the field's value itself-->
+			<mrgInterceptor id="leadingDelim" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatConstantSubFieldMergeInterceptor">
+				<property name="constant" value="$$V"/>
+				<property name="delim" value=""/>
+				<property name="concatTo" value="begining"/>
+			</mrgInterceptor>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+
+		<mergeField id="display_availlibrary" xpath="/record/display/availlibrary" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAllMergeResolver">
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="display_availinstitution" xpath="/record/display/availinstitution" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.CalculateAvailabilityMergeResolver">
+		</mergeField>
+
+
+		<mergeField id="display_availpnx" xpath="/record/display/availpnx" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.CalculateAvailPnxMergeResolver">
+		</mergeField>
+
+
+		<mergeField id="display_lds01" xpath="/record/display/lds01"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+
+		<mergeField id="display_lds02" xpath="/record/display/lds02"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds03" xpath="/record/display/lds03"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds04" xpath="/record/display/lds04"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds05" xpath="/record/display/lds05"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds06" xpath="/record/display/lds06"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds07" xpath="/record/display/lds07"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds08" xpath="/record/display/lds08"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds09" xpath="/record/display/lds09"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds10" xpath="/record/display/lds10"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds11" xpath="/record/display/lds11"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds12" xpath="/record/display/lds12"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds13" xpath="/record/display/lds13"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds14" xpath="/record/display/lds14"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds15" xpath="/record/display/lds15"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds16" xpath="/record/display/lds16"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds17" xpath="/record/display/lds17"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds18" xpath="/record/display/lds18"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds19" xpath="/record/display/lds19"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds20" xpath="/record/display/lds20"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds21" xpath="/record/display/lds21"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds22" xpath="/record/display/lds22"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds23" xpath="/record/display/lds23"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds24" xpath="/record/display/lds24"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds25" xpath="/record/display/lds25"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds26" xpath="/record/display/lds26"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds27" xpath="/record/display/lds27"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds28" xpath="/record/display/lds28"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds29" xpath="/record/display/lds29"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds30" xpath="/record/display/lds30"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds31" xpath="/record/display/lds31"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds32" xpath="/record/display/lds32"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds33" xpath="/record/display/lds33"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds34" xpath="/record/display/lds34"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds35" xpath="/record/display/lds35"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds36" xpath="/record/display/lds36"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds37" xpath="/record/display/lds37"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds38" xpath="/record/display/lds38"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds39" xpath="/record/display/lds39"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds40" xpath="/record/display/lds40"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds41" xpath="/record/display/lds41"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds42" xpath="/record/display/lds42"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds43" xpath="/record/display/lds43"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds44" xpath="/record/display/lds44"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds45" xpath="/record/display/lds45"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds46" xpath="/record/display/lds46"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds47" xpath="/record/display/lds47"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds48" xpath="/record/display/lds48"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds49" xpath="/record/display/lds49"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds50" xpath="/record/display/lds50"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds51" xpath="/record/display/lds51"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds52" xpath="/record/display/lds52"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds53" xpath="/record/display/lds53"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds54" xpath="/record/display/lds54"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds55" xpath="/record/display/lds55"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds56" xpath="/record/display/lds56"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds57" xpath="/record/display/lds57"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds58" xpath="/record/display/lds58"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds59" xpath="/record/display/lds59"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds60" xpath="/record/display/lds60"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds61" xpath="/record/display/lds61"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds62" xpath="/record/display/lds62"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds63" xpath="/record/display/lds63"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds64" xpath="/record/display/lds64"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds65" xpath="/record/display/lds65"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds66" xpath="/record/display/lds66"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds67" xpath="/record/display/lds67"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds68" xpath="/record/display/lds68"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds69" xpath="/record/display/lds69"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds70" xpath="/record/display/lds70"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds71" xpath="/record/display/lds71"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds72" xpath="/record/display/lds72"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds73" xpath="/record/display/lds73"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds74" xpath="/record/display/lds74"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds75" xpath="/record/display/lds75"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds76" xpath="/record/display/lds76"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds77" xpath="/record/display/lds77"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds78" xpath="/record/display/lds78"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds79" xpath="/record/display/lds79"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds80" xpath="/record/display/lds80"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds81" xpath="/record/display/lds81"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds82" xpath="/record/display/lds82"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds83" xpath="/record/display/lds83"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds84" xpath="/record/display/lds84"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds85" xpath="/record/display/lds85"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds86" xpath="/record/display/lds86"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds87" xpath="/record/display/lds87"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds88" xpath="/record/display/lds88"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds89" xpath="/record/display/lds89"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds90" xpath="/record/display/lds90"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds91" xpath="/record/display/lds91"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds92" xpath="/record/display/lds92"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds93" xpath="/record/display/lds93"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds94" xpath="/record/display/lds94"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds95" xpath="/record/display/lds95"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds96" xpath="/record/display/lds96"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds97" xpath="/record/display/lds97"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds98" xpath="/record/display/lds98"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds99" xpath="/record/display/lds99"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds100" xpath="/record/display/lds100"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds101" xpath="/record/display/lds101"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds102" xpath="/record/display/lds102"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds103" xpath="/record/display/lds103"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds104" xpath="/record/display/lds104"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds105" xpath="/record/display/lds105"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds106" xpath="/record/display/lds106"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds107" xpath="/record/display/lds107"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds108" xpath="/record/display/lds108"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds109" xpath="/record/display/lds109"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds110" xpath="/record/display/lds110"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds111" xpath="/record/display/lds111"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds112" xpath="/record/display/lds112"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds113" xpath="/record/display/lds113"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds114" xpath="/record/display/lds114"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds115" xpath="/record/display/lds115"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds116" xpath="/record/display/lds116"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds117" xpath="/record/display/lds117"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds118" xpath="/record/display/lds118"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds119" xpath="/record/display/lds119"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds120" xpath="/record/display/lds120"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds121" xpath="/record/display/lds121"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds122" xpath="/record/display/lds122"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds123" xpath="/record/display/lds123"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds124" xpath="/record/display/lds124"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds125" xpath="/record/display/lds125"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds126" xpath="/record/display/lds126"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds127" xpath="/record/display/lds127"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds128" xpath="/record/display/lds128"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds129" xpath="/record/display/lds129"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds130" xpath="/record/display/lds130"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds131" xpath="/record/display/lds131"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds132" xpath="/record/display/lds132"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds133" xpath="/record/display/lds133"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds134" xpath="/record/display/lds134"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds135" xpath="/record/display/lds135"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds136" xpath="/record/display/lds136"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds137" xpath="/record/display/lds137"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds138" xpath="/record/display/lds138"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds139" xpath="/record/display/lds139"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds140" xpath="/record/display/lds140"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds141" xpath="/record/display/lds141"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds142" xpath="/record/display/lds142"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds143" xpath="/record/display/lds143"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds144" xpath="/record/display/lds144"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds145" xpath="/record/display/lds145"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds146" xpath="/record/display/lds146"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds147" xpath="/record/display/lds147"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds148" xpath="/record/display/lds148"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds149" xpath="/record/display/lds149"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds150" xpath="/record/display/lds150"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds151" xpath="/record/display/lds151"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds152" xpath="/record/display/lds152"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds153" xpath="/record/display/lds153"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds154" xpath="/record/display/lds154"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds155" xpath="/record/display/lds155"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds156" xpath="/record/display/lds156"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds157" xpath="/record/display/lds157"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds158" xpath="/record/display/lds158"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds159" xpath="/record/display/lds159"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds160" xpath="/record/display/lds160"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds161" xpath="/record/display/lds161"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds162" xpath="/record/display/lds162"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds163" xpath="/record/display/lds163"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds164" xpath="/record/display/lds164"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds165" xpath="/record/display/lds165"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds166" xpath="/record/display/lds166"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds167" xpath="/record/display/lds167"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds168" xpath="/record/display/lds168"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds169" xpath="/record/display/lds169"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds170" xpath="/record/display/lds170"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds171" xpath="/record/display/lds171"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds172" xpath="/record/display/lds172"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds173" xpath="/record/display/lds173"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds174" xpath="/record/display/lds174"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds175" xpath="/record/display/lds175"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds176" xpath="/record/display/lds176"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds177" xpath="/record/display/lds177"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds178" xpath="/record/display/lds178"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds179" xpath="/record/display/lds179"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds180" xpath="/record/display/lds180"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds181" xpath="/record/display/lds181"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds182" xpath="/record/display/lds182"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds183" xpath="/record/display/lds183"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds184" xpath="/record/display/lds184"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds185" xpath="/record/display/lds185"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds186" xpath="/record/display/lds186"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds187" xpath="/record/display/lds187"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds188" xpath="/record/display/lds188"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds189" xpath="/record/display/lds189"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds190" xpath="/record/display/lds190"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds191" xpath="/record/display/lds191"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds192" xpath="/record/display/lds192"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds193" xpath="/record/display/lds193"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds194" xpath="/record/display/lds194"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds195" xpath="/record/display/lds195"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds196" xpath="/record/display/lds196"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds197" xpath="/record/display/lds197"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds198" xpath="/record/display/lds198"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds199" xpath="/record/display/lds199"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="display_lds200" xpath="/record/display/lds200"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+
+
+<!-- Links - the GetIt links are ALL merged into the merged record and the source record id is added as a sub field.
+	 the none GetIt links are not merged, meaning the prefered record's link are the links that will be in the merged record
+-->
+		<mergeField id="links_linktoholdings" xpath="/record/links/linktoholdings" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAllMergeResolver">
+			<!-- when adding sub fields to a field we have to also add a $$V before the field's value itself-->
+			<mrgInterceptor id="leadingDelim" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatConstantSubFieldMergeInterceptor">
+				<property name="constant" value="$$V"/>
+				<property name="delim" value=""/>
+				<property name="concatTo" value="begining"/>
+			</mrgInterceptor>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_linktoitems" xpath="/record/links/linktoitems" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAllMergeResolver">
+			<!-- when adding sub fields to a field we have to also add a $$V before the field's value itself-->
+			<mrgInterceptor id="leadingDelim" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatConstantSubFieldMergeInterceptor">
+				<property name="constant" value="$$V"/>
+				<property name="delim" value=""/>
+				<property name="concatTo" value="begining"/>
+			</mrgInterceptor>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_linktoholdsavail" xpath="/record/links/linktoholdsavail" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAllMergeResolver">
+			<!-- when adding sub fields to a field we have to also add a $$V before the field's value itself-->
+			<mrgInterceptor id="leadingDelim" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatConstantSubFieldMergeInterceptor">
+				<property name="constant" value="$$V"/>
+				<property name="delim" value=""/>
+				<property name="concatTo" value="begining"/>
+			</mrgInterceptor>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+
+
+		<mergeField id="links_linktoholdsunavail" xpath="/record/links/linktoholdsunavail" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAllMergeResolver">
+			<!-- when adding sub fields to a field we have to also add a $$V before the field's value itself-->
+			<mrgInterceptor id="leadingDelim" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatConstantSubFieldMergeInterceptor">
+				<property name="constant" value="$$V"/>
+				<property name="delim" value=""/>
+				<property name="concatTo" value="begining"/>
+			</mrgInterceptor>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+
+		<mergeField id="links_linktoholdsnotexist" xpath="/record/links/linktoholdsnotexist" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAllMergeResolver">
+			<!-- when adding sub fields to a field we have to also add a $$V before the field's value itself-->
+			<mrgInterceptor id="leadingDelim" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatConstantSubFieldMergeInterceptor">
+				<property name="constant" value="$$V"/>
+				<property name="delim" value=""/>
+				<property name="concatTo" value="begining"/>
+			</mrgInterceptor>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+
+		<mergeField id="links_linktorequest" xpath="/record/links/linktorequest" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAllMergeResolver">
+			<!-- when adding sub fields to a field we have to also add a $$V before the field's value itself-->
+			<mrgInterceptor id="leadingDelim" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatConstantSubFieldMergeInterceptor">
+				<property name="constant" value="$$V"/>
+				<property name="delim" value=""/>
+				<property name="concatTo" value="begining"/>
+			</mrgInterceptor>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+
+		<mergeField id="links_backlink" xpath="/record/links/backlink" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAllMergeResolver">
+			<!-- when adding sub fields to a field we have to also add a $$V before the field's value itself-->
+			<mrgInterceptor id="leadingDelim" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatConstantSubFieldMergeInterceptor">
+				<property name="constant" value="$$V"/>
+				<property name="delim" value=""/>
+				<property name="concatTo" value="begining"/>
+			</mrgInterceptor>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+
+		<mergeField id="links_linktorsrc" xpath="/record/links/linktorsrc" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<!-- when adding sub fields to a field we have to also add a $$V before the field's value itself-->
+			<mrgInterceptor id="leadingDelim" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatConstantSubFieldMergeInterceptor">
+				<property name="constant" value="$$V"/>
+				<property name="delim" value=""/>
+				<property name="concatTo" value="begining"/>
+			</mrgInterceptor>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_openurl" xpath="/record/links/openurl" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAllMergeResolver">
+			<!-- when adding sub fields to a field we have to also add a $$V before the field's value itself-->
+			<mrgInterceptor id="leadingDelim" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatConstantSubFieldMergeInterceptor">
+				<property name="constant" value="$$V"/>
+				<property name="delim" value=""/>
+				<property name="concatTo" value="begining"/>
+			</mrgInterceptor>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_openurlfulltext" xpath="/record/links/openurlfulltext" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAllMergeResolver">
+			<!-- when adding sub fields to a field we have to also add a $$V before the field's value itself-->
+			<mrgInterceptor id="leadingDelim" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatConstantSubFieldMergeInterceptor">
+				<property name="constant" value="$$V"/>
+				<property name="delim" value=""/>
+				<property name="concatTo" value="begining"/>
+			</mrgInterceptor>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+
+		<mergeField id="links_openurlservice" xpath="/record/links/openurlservice" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAllMergeResolver">
+			<!-- when adding sub fields to a field we have to also add a $$V before the field's value itself-->
+			<mrgInterceptor id="leadingDelim" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatConstantSubFieldMergeInterceptor">
+				<property name="constant" value="$$V"/>
+				<property name="delim" value=""/>
+				<property name="concatTo" value="begining"/>
+			</mrgInterceptor>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="browse_title" xpath="/record/browse/title" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctForBrowseMergeResolver">
+			<mrgInterceptor id="browse_title_inst" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatMultipleSubFieldFromPNXXMLMergeInterceptor">
+				<property name="xpath" value="/record/browse/institution"/>
+				<property name="delim" value="$$U"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="browse_subject" xpath="/record/browse/subject" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctForBrowseMergeResolver">
+			<mrgInterceptor id="browse_subject_inst" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatMultipleSubFieldFromPNXXMLMergeInterceptor">
+				<property name="xpath" value="/record/browse/institution"/>
+				<property name="delim" value="$$U"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="browse_author" xpath="/record/browse/author" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctForBrowseMergeResolver">
+			<mrgInterceptor id="browse_author_inst" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatMultipleSubFieldFromPNXXMLMergeInterceptor">
+				<property name="xpath" value="/record/browse/institution"/>
+				<property name="delim" value="$$U"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="browse_callnumber" xpath="/record/browse/callnumber"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="browse_institution" xpath="/record/browse/institution"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="links_addlink" xpath="/record/links/addlink"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="links_linktotoc" xpath="/record/links/linktotoc"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="links_linktoexcerpt" xpath="/record/links/linktoexcerpt"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="links_linktoabstract" xpath="/record/links/linktoabstract"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="links_linktoreview" xpath="/record/links/linktoreview"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="links_linktoprice" xpath="/record/links/linktoprice"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="links_linktouc" xpath="/record/links/linktouc"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+				<property name="exceptIfStartsWith" value="$$T"/>
+		</mergeField>
+
+		<mergeField id="links_linktofa" xpath="/record/links/linktofa"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="links_thumbnail" xpath="/record/links/thumbnail"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="links_gbsabout" xpath="/record/links/gbsabout"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="links_gbsfull" xpath="/record/links/gbsfull"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="links_gbsaboutnofull" xpath="/record/links/gbsaboutnofull"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="links_lln01" xpath="/record/links/lln01"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln02" xpath="/record/links/lln02"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln03" xpath="/record/links/lln03"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln04" xpath="/record/links/lln04"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln05" xpath="/record/links/lln05"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln06" xpath="/record/links/lln06"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln07" xpath="/record/links/lln07"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln08" xpath="/record/links/lln08"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln09" xpath="/record/links/lln09"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln10" xpath="/record/links/lln10"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln11" xpath="/record/links/lln11"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln12" xpath="/record/links/lln12"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln13" xpath="/record/links/lln13"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln14" xpath="/record/links/lln14"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln15" xpath="/record/links/lln15"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln16" xpath="/record/links/lln16"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln17" xpath="/record/links/lln17"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln18" xpath="/record/links/lln18"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln19" xpath="/record/links/lln19"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln20" xpath="/record/links/lln20"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln21" xpath="/record/links/lln21"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln22" xpath="/record/links/lln22"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln23" xpath="/record/links/lln23"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln24" xpath="/record/links/lln24"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln25" xpath="/record/links/lln25"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln26" xpath="/record/links/lln26"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln27" xpath="/record/links/lln27"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln28" xpath="/record/links/lln28"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln29" xpath="/record/links/lln29"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln30" xpath="/record/links/lln30"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln31" xpath="/record/links/lln31"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln32" xpath="/record/links/lln32"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln33" xpath="/record/links/lln33"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln34" xpath="/record/links/lln34"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln35" xpath="/record/links/lln35"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln36" xpath="/record/links/lln36"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln37" xpath="/record/links/lln37"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln38" xpath="/record/links/lln38"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln39" xpath="/record/links/lln39"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln40" xpath="/record/links/lln40"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln41" xpath="/record/links/lln41"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln42" xpath="/record/links/lln42"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln43" xpath="/record/links/lln43"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln44" xpath="/record/links/lln44"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln45" xpath="/record/links/lln45"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln46" xpath="/record/links/lln46"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln47" xpath="/record/links/lln47"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln48" xpath="/record/links/lln48"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln49" xpath="/record/links/lln49"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="links_lln50" xpath="/record/links/lln50"
+				mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeAndDistinctMergeResolver">
+			<property name="exceptIfStartsWith" value="$$T"/>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+
+
+		<mergeField id="search" xpath="/record/search" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeSectionAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="facets" xpath="/record/facets" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeSectionAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="delivery" xpath="/record/delivery" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeSectionMergeResolver">
+			<mrgInterceptor id="leadingDelim" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatConstantSubFieldMergeInterceptor">
+				<property name="constant" value="$$V"/>
+				<property name="delim" value=""/>
+				<property name="concatTo" value="begining"/>
+			</mrgInterceptor>
+			<mrgInterceptor id="recordId" interceptorName="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.interceptor.ConcatSubFieldFromPNXRecordMergeInterceptor">
+				<property name="field" value="recordId"/>
+				<property name="delim" value="$$O"/>
+				<property name="concatTo" value="end"/>
+			</mrgInterceptor>
+		</mergeField>
+
+		<mergeField id="frbr" xpath="/record/frbr" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeSectionAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="addata" xpath="/record/addata" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.MergeSectionAndDistinctMergeResolver">
+		</mergeField>
+
+		<mergeField id="booster" xpath="/record/ranking/booster" mergeResolver="com.exlibris.primo.publish.platform.pnxmerge.mergeresolver.SelectHighestNumericValueMergeResolver"/>
+
+
+	</mergeFields>
+
+	<!-- general merge operations are performed on the merged record after all merge resolvers are finished
+-->
+	<generalMergeOperations>
+
+		<mergeOperation className="com.exlibris.primo.publish.platform.pnxmerge.generalOperation.AddPreferedRecordIdSubFieldToAllUnmergedLinks">
+			<property name="xPath" value="/record/links"/>
+			<property name="recordIdPrefix" value="$$O"/>
+		</mergeOperation>
+
+	</generalMergeOperations>
+
+
+
+</MergeMetadata>

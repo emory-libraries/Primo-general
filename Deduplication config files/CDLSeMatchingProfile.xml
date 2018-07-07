@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MatchingProfile
+	xmlns="http://www.exlibrisgroup.com/xsd/primo/platform"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.exlibrisgroup.com/xsd/primo/platform ../../../../../../primo_publishing/publish/src/main/com/exlibris/publish/xsd/matchingProfile_v1.0.xsd ">
+
+<handlers>
+ <handler id="SINGLE_MATCH">
+    <fieldID>f20</fieldID>
+    <name>com.exlibris.primo.publish.platform.dedup.comparator.DedupStringComparator</name>
+    <arguments>	
+		<argument name="match">800</argument> 
+  		<argument name="mismatch">0</argument> 
+   </arguments>
+ </handler>
+ <handler id="CDLID">
+    <fieldID>f1,f2,f3,f4,f5</fieldID>
+    <name>com.exlibris.primo.publish.platform.dedup.cdlimpl.CDLIDSerialComparator</name>
+    <arguments>
+		  <argument name="recID_match">+200</argument>
+		  <argument name="recID_recIDInvalid_match">+100</argument>
+		  <argument name="recIDInvalid_match">+50</argument>
+		  <argument name="recID_mismatch">-470</argument>
+		  <argument name="recID_recIDInvalid_mismatch">-50</argument>
+		  <argument name="ISSN_match">+200</argument>
+		  <argument name="ISSNInvalid_match">+50</argument>
+		  <argument name="ISSNCanceled_match">+10</argument>
+		  <argument name="ISSN_ISSNInvalid_match">+100</argument>
+		  <argument name="ISSN_ISSNCanceled_match">+50</argument>
+		  <argument name="ISSNInvalid_ISSNCanceled_match">+30</argument>
+		  <argument name="ISSN_ISSN_mismatch">-250</argument>
+  </arguments>
+ </handler>
+ <handler id="CDLLongTitle">
+    <fieldID>f7,f8</fieldID>
+    <name>com.exlibris.primo.publish.platform.dedup.cdlimpl.CDLTitleSerialComparator</name>
+    <arguments>
+  		<argument name="full_common_match">135</argument>
+  		<argument name="full_match">600</argument>
+		<argument name="full_truncated_common_match">135</argument>
+		<argument name="full_truncated_match">175</argument>
+		<argument name="keywords_weight_factor">75</argument>
+		<argument name="keywords_order_base_weight">50</argument>
+		<argument name="mismatch">-600</argument>
+  </arguments>
+  </handler>
+ <handler id="CDLDate">
+    <fieldID>f6</fieldID>
+    <name>com.exlibris.primo.publish.platform.dedup.cdlimpl.CDLDateSerialComparator</name>
+    <arguments>
+  		<argument name="match">225</argument>
+  		<argument name="within1">50</argument>
+  		<argument name="within2">25</argument>
+  		<argument name="last_digit_zero">20</argument>
+  		<argument name="mismatch">-150</argument>
+  </arguments>
+  </handler>
+ <handler id="CDLCountryOfPub">
+    <fieldID>f9</fieldID>
+    <name>com.exlibris.primo.publish.platform.dedup.comparator.DedupStringComparator</name>
+    <arguments>
+		<argument name="match">40</argument>
+  		<argument name="mismatch">-20</argument>
+   </arguments>
+ </handler>
+   <handler id="CDLPlaceOfPub">
+    <fieldID>f10</fieldID>
+    <name>com.exlibris.primo.publish.platform.dedup.comparator.DedupStringComparator</name>
+    <arguments>
+		<argument name="match">200</argument>
+  		<argument name="mismatch">-100</argument>
+  </arguments>
+  </handler>
+   <handler id="CDLMainEntry_se">
+    <fieldID>f11</fieldID>
+    <name>com.exlibris.primo.publish.platform.dedup.cdlimpl.CDLMainEntrySerialComparator</name>
+    <arguments>
+  		<argument name="match">+200</argument>
+  		<argument name="keywords_weight_factor" param="59">75</argument>
+  		<argument name="keywords_order_base_weight" param="59">25</argument>
+		<argument name="mismatch">-250</argument>
+  </arguments>
+ </handler>
+
+</handlers>
+<thresholds>
+	<threshold id="tr1">
+	  	<upper_threshold>+800</upper_threshold>
+	 	 <lower_threshold>0</lower_threshold>
+  	</threshold>
+	<threshold id="tr2">
+	  	<upper_threshold>+800</upper_threshold>
+  	</threshold>
+  	<threshold id="tr3">
+	  	<upper_threshold>+800</upper_threshold> 
+  	</threshold>
+</thresholds>
+<steps>
+	<step type="handler">SINGLE_MATCH</step>
+    <step type="threshold">tr3</step>
+	<step type="handler">CDLID</step>
+	<step type="handler">CDLLongTitle</step>
+	<step type="threshold">tr1</step>
+	<step type="handler">CDLDate</step>
+	<step type="handler">CDLCountryOfPub</step>
+	<step type="handler">CDLPlaceOfPub</step>
+	<step type="handler">CDLMainEntry_se</step>
+	<step type="threshold">tr2</step>
+</steps>
+<common_title_list>
+	<file_name>CDLSeCommonTitleList.txt</file_name>
+</common_title_list>
+</MatchingProfile>

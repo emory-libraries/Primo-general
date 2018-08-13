@@ -59,7 +59,7 @@
     <arguments>
   		<argument name="match">600</argument>
   		<argument name="within">350</argument>
-		<argument name="keywords_weight_factor">450</argument>
+		<argument name="keywords_weight_factor">50</argument>
 		<argument name="keywords_order_base_weight">50</argument>
 		<argument name="mismatch">-600</argument>
   </arguments>
